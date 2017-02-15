@@ -304,8 +304,13 @@
   // Find user using id
   function find_user_by_id($id=0) {
     global $db;
-    $sql = "SELECT * FROM users WHERE id='" . $id . "' LIMIT 1;";
-    $users_result = db_query($db, $sql);
+	$sql = $db->prepare("SELECT * FROM users WHERE id=? LIMIT 1");
+	$sql->bind_param("i", $user_id);
+	
+	$user_id = $id;
+	$sql->execute();
+	
+	$users_result = mysqli_stmt_get_result($sql);
     return $users_result;
   }
 
@@ -345,19 +350,15 @@
     if (!empty($errors)) {
       return $errors;
     }
-
+	$first_name = $user['first_name'];
+	$last_name = $user['last_name'];
+    $email = $user['email'];
+	$username = $user['username'];
     $created_at = date("Y-m-d H:i:s");
-    $sql = "INSERT INTO users ";
-    $sql .= "(first_name, last_name, email, username, created_at) ";
-    $sql .= "VALUES (";
-    $sql .= "'" . $user['first_name'] . "',";
-    $sql .= "'" . $user['last_name'] . "',";
-    $sql .= "'" . $user['email'] . "',";
-    $sql .= "'" . $user['username'] . "',";
-    $sql .= "'" . $created_at . "',";
-    $sql .= ");";
+    $sql = $db->prepare("INSERT INTO users (first_name, last_name, email, username, created_at) VALUES (?, ?, ?, ?, ?);");
+	$sql->bind_param("sssss", $first_name, $last_name, $email, $username, $created_at);
     // For INSERT statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();//db_query($db, $sql);
     if($result) {
       return true;
     } else {

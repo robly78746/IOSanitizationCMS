@@ -14,7 +14,7 @@ $salesperson = db_fetch_assoc($salespeople_result);
 <?php include(SHARED_PATH . '/header.php'); ?>
 
 <div id="main-content">
-  <a href="#add_a_url">Back to Salespeople List</a><br />
+  <a href="index.php">Back to Salespeople List</a><br />
 
   <h1>Salesperson: <?php echo $salesperson['first_name'] . " " . $salesperson['last_name']; ?></h1>
 
@@ -37,7 +37,7 @@ $salesperson = db_fetch_assoc($salespeople_result);
     db_free_result($salespeople_result);
   ?>
   <br />
-  <a href="#add_a_url">Edit</a><br />
+  <a href="edit.php?id=<?php echo $salesperson['id']; ?>">Edit</a><br />
 </div>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>
