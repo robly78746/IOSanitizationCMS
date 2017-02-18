@@ -235,10 +235,16 @@
     if (!empty($errors)) {
       return $errors;
     }
+	$first_name = $salesperson['first_name'];
+	$last_name = $salesperson['last_name'];
+	$phone = $salesperson['phone'];
+	$email = $salesperson['email'];
+    $sql = $db->prepare("INSERT INTO salespeople (first_name, last_name, phone, email) VALUES (?, ?, ?, ?);"); // TODO add SQL
+    $sql->bind_param("ssss", $first_name, $last_name, $phone, $email);
+	
 
-    $sql = ""; // TODO add SQL
-    // For INSERT statments, $result is just true/false
-    $result = db_query($db, $sql);
+	// For INSERT statments, $result is just true/false
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -260,9 +266,17 @@
       return $errors;
     }
 
-    $sql = ""; // TODO add SQL
+	$first_name = $salesperson['first_name'];
+	$last_name = $salesperson['last_name'];
+	$phone = $salesperson['phone'];
+	$email = $salesperson['email'];
+	$id = $salesperson['id'];
+	
+	$sql = $db->prepare("UPDATE salespeople SET first_name=?, last_name=?, phone=?, email=? WHERE id=? LIMIT 1;");
+	$sql->bind_param("ssssi", $first_name, $last_name, $phone, $email, $id);
+	
     // For update_salesperson statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();//db_query($db, $sql);
     if($result) {
       return true;
     } else {
@@ -358,7 +372,7 @@
     $sql = $db->prepare("INSERT INTO users (first_name, last_name, email, username, created_at) VALUES (?, ?, ?, ?, ?);");
 	$sql->bind_param("sssss", $first_name, $last_name, $email, $username, $created_at);
     // For INSERT statments, $result is just true/false
-    $result = $sql->execute();//db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -379,16 +393,18 @@
     if (!empty($errors)) {
       return $errors;
     }
-
-    $sql = "UPDATE users SET ";
-    $sql .= "first_name='" . $user['first_name'] . "', ";
-    $sql .= "last_name='" . $user['last_name'] . "', ";
-    $sql .= "email='" . $user['email'] . "', ";
-    $sql .= "username='" . $user['username'] . "' ";
-    $sql .= "WHERE id='" . $user['id'] . "' ";
-    $sql .= "LIMIT 1;";
+	
+	$first_name = $user['first_name'];
+	$last_name = $user['last_name'];
+    $email = $user['email'];
+	$username = $user['username'];
+	$id = $user['id'];
+	
+	$sql = $db->prepare("UPDATE users SET first_name=?, last_name=?, email=?, username=? WHERE id=? LIMIT 1;");
+	$sql->bind_param("ssssi", $first_name, $last_name, $email, $username, $id);
+	
     // For update_user statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
