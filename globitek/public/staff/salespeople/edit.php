@@ -51,7 +51,8 @@ if(is_post_request()) {
     <br />
     <input type="submit" name="submit" value="Update"  />
   </form>
-
+  <br />
+  <a href="show.php?id=<?php echo $salesperson['id']; ?>">Cancel</a><br />
 </div>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>
