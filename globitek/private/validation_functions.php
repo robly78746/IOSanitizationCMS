@@ -57,6 +57,7 @@
   }
   
   //My custom validation
+  //returns true if $value is a state id in the states database
   function has_valid_state_id($value) {
 	  global $db;
 	  $sql = $db->prepare("SELECT * FROM states WHERE id=? LIMIT 1;");
@@ -72,11 +73,28 @@
 	  return false;
   }
   
+  
   function has_valid_username($value) {
 	if(preg_match('/^[A-Za-z0-9_]*$/', $value) === 1) {
 		return true;
 	}
 	return false;
+  }
+  //My custom validation
+  //check for uniqueness
+  function has_unique_username($value, $ignoring) {
+	global $db;
+    $sql = $db->prepare("SELECT * FROM users WHERE username=? AND id !=? LIMIT 1;");
+    $sql->bind_param("si", $value, $ignoring);
+    $results = $sql->execute();
+    $sql->store_result();
+    $sql->bind_result($id, $first_name, $last_name, $email, $username, $created_at);
+    $sql->fetch();
+  
+    if($results && $sql->num_rows > 0) {
+    	return false;
+    }
+    return true;
   }
 
 ?>

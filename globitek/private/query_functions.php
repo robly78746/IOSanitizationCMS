@@ -441,6 +441,15 @@
       $errors[] = "Username must be less than 255 characters.";
     } elseif (!has_valid_username($user['username'])) {
 	  $errors[] = "Username must be a valid format.";
+	} else {
+		$ignoring = -1;
+		if(array_key_exists('id', $user)) {
+			$ignoring = $user['id'];
+			
+		} 
+		if(!has_unique_username($user['username'], $ignoring)) {
+			$errors[] = "Username has been taken.";
+		}
 	}
     return $errors;
   }
