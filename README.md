@@ -78,7 +78,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 Describe any challenges encountered while building the app.
 
-*Keeping track the development of so many different web pages was a challenge.
+Markup: *Keeping track the development of so many different web pages was a challenge.
 
 ## License
 
