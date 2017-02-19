@@ -48,8 +48,28 @@
 	return $isPhoneNum;
   }
   
+  //My custom validation
   function has_valid_state_code($value) {
-	return true;
+	if(preg_match('/^[A-Za-z]*$/', $value) === 1) {
+		return strlen($value) == 2;
+	}
+	return false;
+  }
+  
+  //My custom validation
+  function has_valid_state_id($value) {
+	  global $db;
+	  $sql = $db->prepare("SELECT * FROM states WHERE id=? LIMIT 1;");
+	  $sql->bind_param("i", $value);
+	  $results = $sql->execute();
+	  $sql->store_result();
+	  $sql->bind_result($id, $name, $code, $country_id);
+	  $sql->fetch();
+	  
+	  if($results && $sql->num_rows > 0) {
+		return true;
+	  }
+	  return false;
   }
   
   function has_valid_username($value) {

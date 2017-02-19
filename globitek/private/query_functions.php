@@ -56,9 +56,15 @@
 	
 	if (is_blank($state['code'])) {
       $errors[] = "Code cannot be blank.";
-    } elseif (!has_length($state['code'], array('min' => 2, 'max' => 255))) {
-      $errors[] = "Code must be between 2 and 255 characters.";
-    }
+    } elseif (!has_length($state['code'], array('max' => 255))) {
+      $errors[] = "Code must be less than 255 characters.";
+    } elseif (!has_valid_state_code($state['code'])) {
+	  $errors[] = "Code must be a valid format.";
+	} 
+	
+	if (is_blank($state['country_id'])) {
+      $errors[] = "Country ID cannot be blank.";
+    } 
 	
     return $errors;
   }
@@ -157,8 +163,23 @@
   }
 
   function validate_territory($territory, $errors=array()) {
-    // TODO add validations
 
+    if (is_blank($territory['name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif (!has_length($territory['name'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+	
+	if (is_blank($territory['state_id'])) {
+      $errors[] = "State id cannot be blank.";
+    } elseif (!has_valid_state_id($territory['state_id'])) {
+	  $errors[] = "State must have been added to the database first.";
+	}
+	
+	if (is_blank($territory['position'])) {
+      $errors[] = "Position cannot be blank.";
+    } 
+	
     return $errors;
   }
 
