@@ -28,25 +28,38 @@
   // Find all states, ordered by name
   function find_states_for_country_id($country_id=0) {
     global $db;
-    $sql = "SELECT * FROM states ";
-    $sql .= "WHERE country_id='" . $country_id . "' ";
-    $sql .= "ORDER BY name ASC;";
-    $state_result = db_query($db, $sql);
+	$sql = $db->prepare("SELECT * FROM states WHERE country_id=? ORDER BY name ASC;");
+	$sql->bind_param("i", $country_id);
+	$sql->execute();
+    $state_result = mysqli_stmt_get_result($sql);
     return $state_result;
   }
 
   // Find state by ID
   function find_state_by_id($id=0) {
     global $db;
-    $sql = "SELECT * FROM states ";
-    $sql .= "WHERE id='" . $id . "';";
-    $state_result = db_query($db, $sql);
+	
+	$sql = $db->prepare("SELECT * FROM states WHERE id=?;");
+	$sql->bind_param("i", $id);
+	$sql->execute();
+    $state_result = mysqli_stmt_get_result($sql);
     return $state_result;
   }
 
   function validate_state($state, $errors=array()) {
-    // TODO add validations
-
+	
+	if (is_blank($state['name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif (!has_length($state['name'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+	
+	if (is_blank($state['code'])) {
+      $errors[] = "Code cannot be blank.";
+    } elseif (!has_length($state['code'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Code must be between 2 and 255 characters.";
+    }
+	
     return $errors;
   }
 
@@ -60,9 +73,14 @@
       return $errors;
     }
 
-    $sql = ""; // TODO add SQL
+	$name = $state['name'];
+	$code = $state['code'];
+	$country_id = $state['country_id'];
+	
+    $sql = $db->prepare("INSERT INTO states (name, code, country_id) VALUES (?, ?, ?);"); 
+    $sql->bind_param("ssi", $name, $code, $country_id);
     // For INSERT statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -84,9 +102,16 @@
       return $errors;
     }
 
-    $sql = ""; // TODO add SQL
+	$name = $state['name'];
+	$code = $state['code'];
+	$country_id = $state['country_id'];
+	$id = $state['id'];
+	
+    $sql = $db->prepare("UPDATE states SET name=?, code=?, country_id=? WHERE id=? LIMIT 1;");
+	$sql->bind_param("ssii", $name, $code, $country_id, $id);
+	
     // For update_state statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -114,19 +139,20 @@
   // Find all territories whose state_id (foreign key) matches this id
   function find_territories_for_state_id($state_id=0) {
     global $db;
-    $sql = "SELECT * FROM territories ";
-    $sql .= "WHERE state_id='" . $state_id . "' ";
-    $sql .= "ORDER BY position ASC;";
-    $territory_result = db_query($db, $sql);
+	$sql = $db->prepare("SELECT * FROM territories WHERE state_id=? ORDER BY position ASC;");
+	$sql->bind_param("i", $state_id);
+	$sql->execute();
+    $territory_result = mysqli_stmt_get_result($sql);
     return $territory_result;
   }
 
   // Find territory by ID
   function find_territory_by_id($id=0) {
     global $db;
-    $sql = "SELECT * FROM territories ";
-    $sql .= "WHERE id='" . $id . "';";
-    $territory_result = db_query($db, $sql);
+	$sql = $db->prepare("SELECT * FROM territories WHERE id=?;");
+	$sql->bind_param("i", $id);
+	$sql->execute();
+    $territory_result = mysqli_stmt_get_result($sql);
     return $territory_result;
   }
 
@@ -146,9 +172,14 @@
       return $errors;
     }
 
-    $sql = ""; // TODO add SQL
+	$name = $territory['name'];
+	$state_id = $territory['state_id'];
+	$position = $territory['position'];
+		
+    $sql = $db->prepare("INSERT INTO territories (name, state_id, position) VALUES (?, ?, ?);"); // TODO add SQL
+    $sql->bind_param("sii", $name, $state_id, $position);
     // For INSERT statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -170,9 +201,15 @@
       return $errors;
     }
 
-    $sql = ""; // TODO add SQL
+	$name = $territory['name'];
+	$position = $territory['position'];
+	$state_id = $territory['state_id'];
+	$id = $territory['id'];
+	
+    $sql = $db->prepare("UPDATE territories SET name=?, state_id=?, position=? WHERE id=? LIMIT 1;");
+	$sql->bind_param("siii", $name, $state_id, $position, $id);
     // For update_territory statments, $result is just true/false
-    $result = db_query($db, $sql);
+    $result = $sql->execute();
     if($result) {
       return true;
     } else {
@@ -216,7 +253,10 @@
     global $db;
     $sql = "SELECT * FROM salespeople ";
     $sql .= "WHERE id='" . $id . "';";
-    $salespeople_result = db_query($db, $sql);
+	$sql = $db->prepare("SELECT * FROM salespeople WHERE id=?;");
+	$sql->bind_param("i", $id);
+	$sql->execute();
+    $salespeople_result = mysqli_stmt_get_result($sql);
     return $salespeople_result;
   }
 
@@ -235,13 +275,17 @@
 
     if (is_blank($salesperson['email'])) {
       $errors[] = "Email cannot be blank.";
-    } elseif (!has_valid_email_format($salesperson['email'])) {
+    } elseif (!has_length($salesperson['email'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Email must be between 2 and 255 characters.";
+	} elseif (!has_valid_email_format($salesperson['email'])) {
       $errors[] = "Email must be a valid format.";
     }
 
     if (is_blank($salesperson['phone'])) {
       $errors[] = "Phone number cannot be blank.";
-    } elseif (!has_valid_phone_format($salesperson['phone'])) {
+    } elseif (!has_length($salesperson['phone'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Phone number must be between 2 and 255 characters.";
+    } elseif(!has_valid_phone_format($salesperson['phone'])) {
       $errors[] = "Phone number must be a valid format.";
     }
     return $errors;
@@ -364,6 +408,8 @@
 
     if (is_blank($user['email'])) {
       $errors[] = "Email cannot be blank.";
+    } elseif (!has_length($user['email'], array('min' => 2, 'max' => 255))) {
+      $errors[] = "Email must be between 2 and 255 characters.";
     } elseif (!has_valid_email_format($user['email'])) {
       $errors[] = "Email must be a valid format.";
     }
@@ -372,7 +418,9 @@
       $errors[] = "Username cannot be blank.";
     } elseif (!has_length($user['username'], array('max' => 255))) {
       $errors[] = "Username must be less than 255 characters.";
-    }
+    } elseif (!has_valid_username($user['username'])) {
+	  $errors[] = "Username must be a valid format.";
+	}
     return $errors;
   }
 
