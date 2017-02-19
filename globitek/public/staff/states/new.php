@@ -19,7 +19,7 @@ if(is_post_request()) {
   $result = insert_state($state);
   if($result === true) {
     $new_id = db_insert_id($db);
-    redirect_to('show.php?id=' . $new_id);
+    redirect_to('show.php?id=' . raw_u($new_id));
   } else {
     $errors = $result;
   }

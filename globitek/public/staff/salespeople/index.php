@@ -23,13 +23,13 @@
     echo "</tr>";
     while($salesperson = db_fetch_assoc($salespeople_result)) {
       echo "<tr>";
-      echo "<td>" . $salesperson['first_name'] . "</td>";
-      echo "<td>" . $salesperson['last_name'] . "</td>";
+      echo "<td>" . h($salesperson['first_name']) . "</td>";
+      echo "<td>" . h($salesperson['last_name']) . "</td>";
       echo "<td>";
-      echo "<a href=\"show.php?id=". $salesperson['id'] . "\">Show</a>";
+      echo "<a href=\"show.php?id=". h(raw_u($salesperson['id'])) . "\">Show</a>";
       echo "</td>";
       echo "<td>";
-      echo "<a href=\"edit.php?id=". $salesperson['id'] . "\">Edit</a>";
+      echo "<a href=\"edit.php?id=". h(raw_u($salesperson['id'])) . "\">Edit</a>";
       echo "</td>";
       echo "</tr>";
     } // end while $salesperson

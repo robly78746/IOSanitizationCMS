@@ -10,37 +10,37 @@ $state_result = find_state_by_id($id);
 $state = db_fetch_assoc($state_result);
 ?>
 
-<?php $page_title = 'Staff: State of ' . $state['name']; ?>
+<?php $page_title = 'Staff: State of ' . h($state['name']); ?>
 <?php include(SHARED_PATH . '/header.php'); ?>
 
 <div id="main-content">
   <a href="index.php">Back to States List</a><br />
 
-  <h1>State: <?php echo $state['name']; ?></h1>
+  <h1>State: <?php echo h($state['name']); ?></h1>
 
   <?php
     echo "<table id=\"state\">";
     echo "<tr>";
     echo "<td>Name: </td>";
-    echo "<td>" . $state['name'] . "</td>";
+    echo "<td>" . h($state['name']) . "</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td>Code: </td>";
-    echo "<td>" . $state['code'] . "</td>";
+    echo "<td>" . h($state['code']) . "</td>";
     echo "</tr>";
     echo "<tr>";
     echo "<td>Country ID: </td>";
-    echo "<td>" . $state['country_id'] . "</td>";
+    echo "<td>" . h($state['country_id']) . "</td>";
     echo "</tr>";
     echo "</table>";
 ?>
     <br />
-    <a href="edit.php?id=<?php echo $state['id']; ?>">Edit</a><br />
+    <a href="edit.php?id=<?php echo h(raw_u($state['id'])); ?>">Edit</a><br />
     <hr />
 
     <h2>Territories</h2>
     <br />
-    <a href="../territories/new.php">Add a Territory</a><br />
+    <a href="../territories/new.php?state_id=<?php echo h(raw_u($state['id'])); ?>">Add a Territory</a><br />
 
 <?php
     $territory_result = find_territories_for_state_id($state['id']);
@@ -48,8 +48,8 @@ $state = db_fetch_assoc($state_result);
     echo "<ul id=\"territories\">";
     while($territory = db_fetch_assoc($territory_result)) {
       echo "<li>";
-      echo "<a href=\"../territories/show.php?id=". $territory['id'] . "\">";
-      echo $territory['name'];
+      echo "<a href=\"../territories/show.php?id=". h(raw_u($territory['id'])) . "\">";
+      echo h($territory['name']);
       echo "</a>";
       echo "</li>";
     } // end while $territory

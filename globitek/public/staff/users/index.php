@@ -24,14 +24,14 @@
     echo "</tr>";
     while($user = db_fetch_assoc($users_result)) {
       echo "<tr>";
-      echo "<td>" . $user['first_name'] . "</td>";
-      echo "<td>" . $user['last_name'] . "</td>";
-      echo "<td>" . $user['username'] . "</td>";
+      echo "<td>" . h($user['first_name']) . "</td>";
+      echo "<td>" . h($user['last_name']) . "</td>";
+      echo "<td>" . h($user['username']) . "</td>";
       echo "<td>";
-      echo "<a href=\"show.php?id=" . $user['id'] . "\">Show</a>";
+      echo "<a href=\"show.php?id=" . h(raw_u($user['id'])) . "\">Show</a>";
       echo "</td>";
       echo "<td>";
-      echo "<a href=\"edit.php?id=" . $user['id'] . "\">Edit</a>";
+      echo "<a href=\"edit.php?id=" . h(raw_u($user['id'])) . "\">Edit</a>";
       echo "</td>";
       echo "</tr>";
     } // end while $user

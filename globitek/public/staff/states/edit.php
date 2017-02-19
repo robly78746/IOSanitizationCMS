@@ -28,13 +28,13 @@ if(is_post_request()) {
 }
 
 ?>
-<?php $page_title = 'Staff: Edit State ' . $state['name']; ?>
+<?php $page_title = 'Staff: Edit State ' . h($state['name']); ?>
 <?php include(SHARED_PATH . '/header.php'); ?>
 
 <div id="main-content">
   <a href="index.php">Back to States List</a><br />
 
-  <h1>Edit State: <?php echo $state['name']; ?></h1>
+  <h1>Edit State: <?php echo h($state['name']); ?></h1>
 
   <?php echo display_errors($errors); ?>
 
@@ -49,7 +49,7 @@ if(is_post_request()) {
     <input type="submit" name="submit" value="Update"  />
   </form>
   <br />
-  <a href="show.php?id=<?php echo $state['id']; ?>">Cancel</a><br />
+  <a href="show.php?id=<?php echo h(raw_u($state['id'])); ?>">Cancel</a><br />
 
 </div>
 
