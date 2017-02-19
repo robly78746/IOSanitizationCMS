@@ -40,13 +40,13 @@ if(is_post_request()) {
 
   <form action="edit.php?id=<?php echo $user['id']; ?>" method="post">
     First name:<br />
-    <input type="text" name="first_name" value="<?php echo $user['first_name']; ?>" /><br />
+    <input type="text" name="first_name" value="<?php echo h($user['first_name']); ?>" /><br />
     Last name:<br />
-    <input type="text" name="last_name" value="<?php echo $user['last_name']; ?>" /><br />
+    <input type="text" name="last_name" value="<?php echo h($user['last_name']); ?>" /><br />
     Username:<br />
-    <input type="text" name="username" value="<?php echo $user['username']; ?>" /><br />
+    <input type="text" name="username" value="<?php echo h($user['username']); ?>" /><br />
     Email:<br />
-    <input type="text" name="email" value="<?php echo $user['email']; ?>" /><br />
+    <input type="text" name="email" value="<?php echo h($user['email']); ?>" /><br />
     <br />
     <input type="submit" name="submit" value="Update"  />
   </form>

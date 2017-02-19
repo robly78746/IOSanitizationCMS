@@ -41,13 +41,13 @@ if(is_post_request()) {
 
   <form action="edit.php?id=<?php echo $salesperson['id']; ?>" method="post">
     First name:<br />
-    <input type="text" name="first_name" value="<?php echo $salesperson['first_name']; ?>" /><br />
+    <input type="text" name="first_name" value="<?php echo h($salesperson['first_name']); ?>" /><br />
     Last name:<br />
-    <input type="text" name="last_name" value="<?php echo $salesperson['last_name']; ?>" /><br />
+    <input type="text" name="last_name" value="<?php echo h($salesperson['last_name']); ?>" /><br />
     Phone:<br />
-    <input type="text" name="phone" value="<?php echo $salesperson['phone']; ?>" /><br />
+    <input type="text" name="phone" value="<?php echo h($salesperson['phone']); ?>" /><br />
     Email:<br />
-    <input type="text" name="email" value="<?php echo $salesperson['email']; ?>" /><br />
+    <input type="text" name="email" value="<?php echo h($salesperson['email']); ?>" /><br />
     <br />
     <input type="submit" name="submit" value="Update"  />
   </form>
